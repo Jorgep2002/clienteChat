@@ -2,76 +2,68 @@ package lenin.Client;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+
 import java.net.Socket;
 
 public class Session {
-  private ObjectOutputStream objectOutputStream;
-  private ObjectInputStream objectInputStream;
+  private DataOutputStream dataOutputStream;
+  private DataInputStream dataInputStream;
   private Socket socket;
 
   public Session(Socket socket) {
-    this.socket = socket;
     try {
-      this.objectOutputStream = new ObjectOutputStream(this.socket.getOutputStream());
-      this.objectOutputStream.flush();
-      this.objectInputStream = new ObjectInputStream(this.socket.getInputStream());
-    } catch (IOException e) {
+      this.socket = socket;
+      this.dataOutputStream = new DataOutputStream(this.socket.getOutputStream());
+      this.dataInputStream = new DataInputStream(this.socket.getInputStream());
+    } catch (Exception e) {
       e.printStackTrace();
-      close();
+      this.dataOutputStream = null;
+      this.dataInputStream = null;
+      this.socket = null;
     }
   }
 
   public Object read() throws IOException {
     try {
-      return this.objectInputStream.readObject();
+      return this.dataInputStream.readUTF();
     } catch (EOFException e) {
       System.out.println("Connection closed by the client.");
-      throw e; // Propaga la excepción para que sea manejada en el cliente
-    } catch (ClassNotFoundException e) {
+      throw e; // Propagar la excepción para manejarla en el nivel superior
+    } catch (IOException e) {
       e.printStackTrace();
-      throw new IOException("Failed to read object", e);
+      throw e; // Propagar la excepción para manejarla en el nivel superior
     }
   }
-
-  public boolean write(Object data) throws IOException {
+  public boolean write(String data) throws IOException {
     try {
-      this.objectOutputStream.writeObject(data);
-      this.objectOutputStream.flush();
-      return true;
+      this.dataOutputStream.writeUTF(data);
+      this.dataOutputStream.flush();
     } catch (IOException e) {
       e.printStackTrace();
       throw e;
     }
+    return false;
   }
 
-  public boolean close() {
-    boolean success = true;
+  public boolean close() throws IOException {
     try {
-      if (this.objectOutputStream != null) {
-        this.objectOutputStream.close();
+      if (this.dataOutputStream != null) {
+        this.dataOutputStream.close();
       }
-    } catch (IOException e) {
-      e.printStackTrace();
-      success = false;
-    }
-    try {
-      if (this.objectInputStream != null) {
-        this.objectInputStream.close();
+      if (this.dataInputStream != null) {
+        this.dataInputStream.close();
       }
-    } catch (IOException e) {
-      e.printStackTrace();
-      success = false;
-    }
-    try {
-      if (this.socket != null && !this.socket.isClosed()) {
+      if (this.socket != null) {
         this.socket.close();
       }
     } catch (IOException e) {
       e.printStackTrace();
-      success = false;
+      throw e;
     }
-    return success;
+    return false;
   }
+
+
 }

@@ -53,7 +53,7 @@ public class Client implements SocketProcess {
         return clientName;
     }
 
-    public boolean send(Object data) throws IOException {
+    public boolean send(String data) throws IOException {
         if (session != null) {
             return session.write(data);
         }
@@ -74,10 +74,16 @@ public class Client implements SocketProcess {
     }
 
     @Override
-    public boolean close() {
+    public boolean close()  throws IOException {
+        try{
+
         boolean successful = this.session.close();
         this.session = null;
         this.running = false;
         return successful;
+        }catch (IOException e){
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

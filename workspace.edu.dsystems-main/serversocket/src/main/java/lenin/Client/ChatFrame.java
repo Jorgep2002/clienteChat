@@ -79,7 +79,11 @@ public class ChatFrame extends JFrame {
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                closeConnection();
+                try {
+                    closeConnection();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -134,7 +138,7 @@ public class ChatFrame extends JFrame {
         }
     }
 
-    private void closeConnection() {
+    private void closeConnection() throws IOException {
 
             if (client != null) {
                 client.close(); // Cerrar la conexión del cliente
