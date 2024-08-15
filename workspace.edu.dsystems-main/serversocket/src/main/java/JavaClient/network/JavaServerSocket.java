@@ -1,4 +1,4 @@
-package lenin.java_server_socket;
+package JavaClient.network;
 
 import java.io.IOException;
 

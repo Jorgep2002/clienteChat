@@ -1,11 +1,10 @@
-package lenin;
+package JavaClient;
 
-import lenin.Client.Client;
-import lenin.Client.NameInputFrame;
-import lenin.Client.ChatFrame;
+import JavaClient.UI.ChatFrame;
+import JavaClient.Client.Client;
+import JavaClient.UI.NameInputFrame;
 
 import javax.swing.*;
-import java.io.IOException;
 
 public class Comunicaciones {
 
@@ -17,21 +16,21 @@ public class Comunicaciones {
 
     public void startChat() {
         try {
-            // Mostrar la ventana para ingresar el nombre
+
             SwingUtilities.invokeLater(() -> {
                 NameInputFrame nameInputFrame = new NameInputFrame(client);
                 nameInputFrame.setVisible(true);
             });
 
-            // Esperar a que se envíe el nombre antes de continuar
+
             while (client.getClientName() == null) {
-                Thread.sleep(100); // Breve pausa para evitar un bucle intenso
+                Thread.sleep(100);
             }
 
             if (client.connect()) {
                 System.out.println("Connected to server");
 
-                // Mostrar la ventana de chat
+
                 SwingUtilities.invokeLater(() -> {
                     ChatFrame chatFrame = new ChatFrame(client);
                     chatFrame.setVisible(true);

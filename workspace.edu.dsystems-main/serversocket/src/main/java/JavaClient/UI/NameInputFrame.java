@@ -1,4 +1,6 @@
-package lenin.Client;
+package JavaClient.UI;
+
+import JavaClient.Client.Client;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,23 +21,23 @@ public class NameInputFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new FlowLayout());
 
-        // Campo de texto para ingresar el nombre
+
         nameField = new JTextField(20);
         add(new JLabel("Enter your name:"));
         add(nameField);
 
-        // Botón para enviar el nombre
+
         submitButton = new JButton("Submit");
         add(submitButton);
 
-        // Acción del botón
+
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String clientName = nameField.getText();
                 if (clientName != null && !clientName.trim().isEmpty()) {
                     client.setClientName(clientName);
-                    dispose(); // Cierra la ventana después de enviar el nombre
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(NameInputFrame.this, "Name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
                 }

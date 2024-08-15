@@ -54,7 +54,7 @@
             <archive>
               <manifest>
                 <addClasspath>true</addClasspath>
-                <mainClass>lenin.Main</mainClass>
+                <mainClass>JavaClient.Main</mainClass>
               </manifest>
             </archive>
           </configuration>
